@@ -37,7 +37,7 @@ const char* wifi_ssid = "TrashVendoWifi-01";
  * @brief Generates 4 digit decimal number
  * @return `uint32_t result`
  */
-int generate_code() {
+uint32_t generate_code() {
 	return esp_random() % 10000u;
 }
 
@@ -76,7 +76,6 @@ namespace OLED_SSD1306 {
 		cursor_grid_pos_row = 0;
 
 	int32_t init() {
-
 		int32_t init_status = ssd1306_init(&oled);
 		if (init_status == 0) {
 			ssd1306_display_on(&oled, 1);
@@ -136,7 +135,7 @@ int app_main() {
 
 void oled_test(void*) {
 	if (OLED_SSD1306::init() != 0) {
-		WAIT(3000);
+		return;
 	}
 
 	OLED_SSD1306::set_grid_cursor(0, 0);
@@ -157,6 +156,7 @@ void handle_input_trash_countdown(int remaining_sec /* = 15 */) {
 			msg[0] = static_cast<char>((rem / 10) + '0');
 			msg[1] = static_cast<char>((rem % 10) + '0');
 			draw_string(msg);
+			update();
 
 			WAIT(1000);
 
